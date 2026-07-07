@@ -1,0 +1,36 @@
+name: Fetch Claude Usage Data
+
+on:
+  schedule:
+    # Every 30 minutes
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch usage data
+        env:
+          ANTHROPIC_ADMIN_API_KEY: ${{ secrets.ANTHROPIC_ADMIN_API_KEY }}
+          ADMIN_EMAIL: hardik@vmukti.com
+        run: python scripts/fetch_usage.py
+
+      - name: Commit data
+        run: |
+          git config user.name "Usage Bot"
+          git config user.email "actions@github.com"
+          git add data/usage.json
+          git diff --staged --quiet || git commit -m "chore: update usage data [skip ci]"
+          git push

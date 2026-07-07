@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Usage Leaderboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <!-- ── Login Screen ──────────────────────────────────────────────── -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">🧠</div>
+      <h1>Claude Usage Leaderboard</h1>
+      <p>Sign in with your @vmukti.com Google account</p>
+      <div id="g_id_onload"
+           data-client_id="YOUR_GOOGLE_CLIENT_ID"
+           data-callback="handleCredentialResponse"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-size="large"
+           data-theme="outline"
+           data-text="sign_in_with"
+           data-shape="rectangular"
+           data-logo_alignment="left">
+      </div>
+      <p class="login-hint">Access restricted to @vmukti.com domain</p>
+    </div>
+  </div>
+
+  <!-- ── Dashboard ─────────────────────────────────────────────────── -->
+  <div id="dashboard" class="dashboard hidden">
+    <!-- Top Nav -->
+    <nav class="topbar">
+      <div class="brand">
+        🧠 <span>Claude Usage Leaderboard</span>
+      </div>
+      <div class="nav-right">
+        <span id="current-user" class="user-badge"></span>
+        <button onclick="signOut()" class="btn-signout">Sign out</button>
+      </div>
+    </nav>
+
+    <!-- Summary Cards -->
+    <section class="summary-cards">
+      <div class="card stat-card">
+        <div class="stat-icon">🪙</div>
+        <div class="stat-value" id="total-tokens">—</div>
+        <div class="stat-label">Total Tokens (30d)</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" id="total-cost">—</div>
+        <div class="stat-label">Est. Cost (30d)</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="active-users">—</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value" id="total-calls">—</div>
+        <div class="stat-label">API Calls (30d)</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-icon">🔄</div>
+        <div class="stat-value" id="total-sessions">—</div>
+        <div class="stat-label">Code Sessions (30d)</div>
+      </div>
+    </section>
+
+    <!-- Last Updated -->
+    <div class="last-updated" id="last-updated">Loading data…</div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
+      <button class="tab" onclick="switchTab('trends')">📈 Trends</button>
+      <button class="tab" onclick="switchTab('badges')">🏅 Badges</button>
+    </div>
+
+    <!-- Leaderboard Tab -->
+    <section id="tab-leaderboard" class="tab-content active">
+      <!-- View Controls -->
+      <div class="controls">
+        <select id="sort-by" onchange="renderLeaderboard()" class="select-control">
+          <option value="total_tokens">Total Tokens</option>
+          <option value="input_tokens">Input Tokens</option>
+          <option value="output_tokens">Output Tokens</option>
+          <option value="estimated_cost">Estimated Cost</option>
+          <option value="api_calls">API Calls</option>
+          <option value="claude_code_sessions">Code Sessions</option>
+          <option value="claude_code_commits">Commits</option>
+        </select>
+        <select id="time-range" onchange="renderLeaderboard()" class="select-control">
+          <option value="30">Last 30 days</option>
+          <option value="7">Last 7 days</option>
+          <option value="all">All time</option>
+        </select>
+      </div>
+
+      <!-- Leaderboard Table -->
+      <div class="leaderboard-container">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th class="col-rank">#</th>
+              <th class="col-name">Engineer</th>
+              <th class="col-email">Email</th>
+              <th class="num">Tokens</th>
+              <th class="num">Input</th>
+              <th class="num">Output</th>
+              <th class="num">Cache Read</th>
+              <th class="num">Cost</th>
+              <th class="num">API Calls</th>
+              <th class="num">Sessions</th>
+              <th class="num">Commits</th>
+              <th class="col-bar">Share</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Trends Tab -->
+    <section id="tab-trends" class="tab-content">
+      <div class="chart-container">
+        <h3>Token Usage Distribution</h3>
+        <div id="bar-chart" class="bar-chart"></div>
+      </div>
+      <div class="chart-container">
+        <h3>Top 5 Users Comparison</h3>
+        <div id="comparison-chart" class="comparison-chart"></div>
+      </div>
+    </section>
+
+    <!-- Badges Tab -->
+    <section id="tab-badges" class="tab-content">
+      <div id="badges-grid" class="badges-grid"></div>
+    </section>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
