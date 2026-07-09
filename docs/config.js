@@ -4,7 +4,7 @@
 
 const CONFIG = {
   // Replace with your Google OAuth 2.0 Client ID
-  GOOGLE_CLIENT_ID: "YOUR_GOOGLE_CLIENT_ID",
+  GOOGLE_CLIENT_ID: "152932797428-lnt8bpgruojajui9b4umsui7c49uljnu.apps.googleusercontent.com",
 
   // Allowed email domain (only these emails can see the dashboard)
   ALLOWED_DOMAIN: "vmukti.com",
